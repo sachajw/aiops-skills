@@ -338,8 +338,17 @@ async function main(source: string, options: Options) {
     const skillFiles: Record<string, string> = {};
     for (const skill of selectedSkills) {
       // skill.path is absolute, compute relative from tempDir
-      const relativePath = skill.path.replace(tempDir + '/', '');
-      skillFiles[skill.name] = relativePath + '/SKILL.md';
+      let relativePath: string;
+      if (tempDir && skill.path === tempDir) {
+        // Skill is at root level of repo
+        relativePath = 'SKILL.md';
+      } else if (tempDir && skill.path.startsWith(tempDir + '/')) {
+        relativePath = skill.path.slice(tempDir.length + 1) + '/SKILL.md';
+      } else {
+        // Local path or unexpected case - just use the skill name
+        relativePath = skill.name + '/SKILL.md';
+      }
+      skillFiles[skill.name] = relativePath;
     }
 
     track({
