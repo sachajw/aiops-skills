@@ -1,1 +1,1 @@
-pnpm lint-staged
+/opt/homebrew/bin/pnpm lint-staged
